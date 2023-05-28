@@ -1,0 +1,27 @@
+[
+  {
+    "Name": "Explore",
+    "Route": "/explore",
+    "Icon": "MdOutlineTravelExplore"
+  },
+  {
+    "Name": "Content Manager",
+    "Route": "/contentmanager",
+    "Icon": "MdOutlineTravelExplore"
+  },
+  {
+    "Name": "Messages",
+    "Route": "/messages",
+    "Icon": "FiMessageCircle"
+  },
+  {
+    "Name": "Settings",
+    "Route": "/settings",
+    "Icon": "IoSettingsOutline"
+  },
+  {
+    "Name": "Logout",
+    "Route": "/login",
+    "Icon": "CiLogout"
+  }
+]

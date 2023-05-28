@@ -1,0 +1,323 @@
+
+.influencerPage{
+      max-width: 90vw;
+      margin-left: auto;
+      padding: 2.5rem 0;
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      column-gap: 2.5rem;
+      box-sizing: border-box;
+}
+
+
+/* !______________________Influencer Card Components Styling___________________________ */
+/* ?Influencer Card Text */
+
+.influencerCard{
+      
+      box-sizing: border-box;
+display: inline-block;
+border-radius: 0.625rem;
+background-color: #ffffff;
+padding: 1.875rem 0;
+color: #0e0e0e;
+position: sticky;
+box-shadow: 0 8px 19px rgba(0, 0, 0, 0.15);
+display: flex;
+flex-direction: column;
+row-gap: 1.25rem;
+align-items: center;
+justify-content: center;
+max-height:100vh;
+}
+
+.cardText{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 0.625rem;
+
+}
+
+.cardText h1,h2,h3{
+    margin: 0;
+}
+
+.cardText h1{
+    font-size: 1.375rem;
+    /* font-weight: bold; */
+    font-weight: var(--font-weight-bold);
+    color: var(--black);
+}
+
+.cardText h2{
+    font-size: 0.875rem;
+    color: var(--black);
+    opacity: 0.45;
+    font-weight: var(--font-weight-semibold);
+}
+
+.cardText h3{
+    font-size: 0.875rem;
+    color: var(--black);
+    opacity: 0.45;
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ?Influencer Image Component */
+.profileimg img{
+    max-width: 100%;
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 6.25rem;
+    border:  0.1875rem solid var(--black);
+}
+
+/* ?Add to favourite Component*/
+.addtoFavourite{
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.625rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9375rem 0;
+}
+
+.addtoFavourite img{
+    width: 1.375rem;
+    height: 100%;
+}
+/* ?Social Media and Location */
+.instaInfo{
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.9375rem;
+}
+
+.instaInfo img{
+    max-width: 100%;
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.instaInfo label{
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--black);
+    opacity: 0.45;
+}
+
+.locationInfo{
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.9375rem;
+}
+
+.locationInfo img{
+    max-width: 100%;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.locationInfo label{
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--black);
+    opacity: 0.45;
+}
+
+
+.socialMediaLinks{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.25rem;
+    padding: 1.25rem 0;
+}
+
+/* ?Tag Component */
+
+.tagGrid{
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   grid-template-rows: 1fr 1fr;
+   gap: 0.625rem;
+}
+
+/* .................................................................................. */
+
+/*!_______________________Influencer Navbar Data page_____________________ */
+
+/* ? Influencer Navbar */
+
+.tabNav h1{
+    margin: 0;
+}
+
+.tabNav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 3.75rem;
+}
+
+.active{
+    color: var(--primary-purple);
+    font-weight:var(--font-weight-bold);
+    text-decoration: underline;
+    opacity: 1;
+}
+
+
+/* ? Influencer Navbar Data  */
+.influencerNavData{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    row-gap: 3.125rem;
+    max-height:100vh;
+}
+   
+
+
+/* ?Image Gallery/Post Tab */
+.postGallery{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: min-content;
+    column-gap: 1.25rem;
+    row-gap: 1.25rem;
+    overflow-y: scroll;
+    padding-right: 0.625rem;
+}
+
+/* ............................................................... */
+.postGallery::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+  
+  .postGallery::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0.625rem;
+  }
+  
+  .postGallery::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0.625rem;
+  }
+  
+  .postGallery::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-purple);
+  } 
+  
+/* ............................................................... */
+
+.imgWrapper{
+    max-width: 100%;
+    position: relative;
+}
+
+
+.imgWrapper img{
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.imgWrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 1);
+    transition: opacity 0.3s ease;
+    border-radius: 0.5rem;
+  }
+  
+  .imgWrapper:hover::before {
+    opacity: 0.6;
+  }
+
+  .imgWrapper:hover::after {
+    content: "View on Instagram";
+    position: absolute;
+    top: 50%;
+    font-size: 0.875rem;
+    text-align: center;
+    font-weight: var(--font-weight-semibold);
+    left: 50%;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    color: white;
+  }
+
+/* ? Pricing Tab*/
+.pricingPageContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 4.375rem;
+}
+
+/* ?Pricing Page Navbar*/
+.pricingNav{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(94, 23, 235, 0.1);
+    padding: 0.5rem 0.5rem;
+    border-radius: 3.75rem;
+    margin: auto;
+}
+
+/* ?Single Tab element */
+.tabelement{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border-radius: 3.125rem;
+}
+
+.tabelement span{
+    color: var(--black);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.activePriceTab{
+    background-color: var(--primary-purple);
+    transition: all 0.4s;
+}
+
+.activePriceTab span{
+    color: white;
+    opacity: 10;
+    cursor: pointer;
+}
+
+
+.activePriceTab img {
+    filter: brightness(0) invert(1);
+  }
+
+
+/* ?..................................................... */
+.buyPost{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    column-gap: 1.25rem;
+}

@@ -5,13 +5,13 @@ dotenv.config();
 import cors from 'cors';
 import app from './app.js';
 import ConnectToMongoose from './Db/index.js';
-import authRoutes from './Routes/auth.route.js';
-import userRoutes from './Routes/user.route.js';
+import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js';
 import ErrorHandler from './middleware/globalErrorHandler.js';
-
 
 const MODE = process.env.NODE_ENV;
 //Generic Middleware
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -21,10 +21,9 @@ app.use(
         ? process.env.REQUEST_ORIGIN_DEVELOPMENT
         : process.env.REQUEST_ORIGIN_PRODUCTION,
     credentials: true, //access-control-allow-credentials:true
-    optionSuccessStatus: 200,
+    // optionSuccessStatus: 200,
   })
 );
-app.use(cookieParser());
 
 //Routes
 app.use('/api/auth', authRoutes);

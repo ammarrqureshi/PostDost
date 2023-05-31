@@ -7,28 +7,31 @@ import { MdOutlineAddBox } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
 import { SidebarContext } from '../../../contexts/SidebarProvider';
 import SideDrawer from './Drawer';
-import { userDataLoader } from '../../../utils/UserData';
-import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const Sidebar = () => {
+  const navigate = useNavigate();
   const { isOpen, toggleDrawer, setFName, setSName, setEmail } =
     useContext(SidebarContext);
   useEffect(() => {
     const user = async () => {
       try {
-        const res = await userDataLoader();
-        console.log('ResUser', res);
-        if (res) {
-          setFName(res.firstName);
-          if (res.secondName) {
-            setSName(res.secondName);
-          }
-          setEmail(res.email);
-        }
+        await axios
+          .get('http://localhost:8000/api/users', { withCredentials: true })
+          .then((response) => {
+            // response.status === 200 && console.log(response);
+            if (response) {
+              setFName(response.data.firstName);
+              setSName(response.data.secondName);
+              setEmail(response.data.email);
+            }
+          });
       } catch (error) {
-        console.error('Error while fetching data:', error);
+        // error.response.status === 401 && navigate('/');
+        console.log(error);
+        console.log(error.response.status);
       }
     };
-
     user();
   }, []);
   return (
@@ -44,7 +47,7 @@ const Sidebar = () => {
         </div>
         <div className="w-14 h-14 relative">
           <img
-            src="/sidebar/dummyprofile.png"
+            src={'/noavatar.png'}
             alt=""
             className="w-full h-full rounded-full"
           />

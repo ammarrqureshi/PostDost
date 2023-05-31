@@ -1,10 +1,10 @@
-import User from '../Models/user.model.js';
-import createError from '../Utils/createError.js';
+import User from '../models/user.model.js';
+import createError from '../utils/createError.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import sendOTPVerificationEmail from '../Utils/SendOTPVerificationEmail.js';
-import UserOTPVerification from '../Models/userOTPVerification.model.js';
-import LogError from '../Utils/LogError.js';
+import sendOTPVerificationEmail from '../utils/SendOTPVerificationEmail.js';
+import UserOTPVerification from '../models/userOTPVerification.model.js';
+import LogError from '../utils/LogError.js';
 
 export const register = async (req, res, next) => {
   try {
@@ -30,16 +30,16 @@ export const register = async (req, res, next) => {
   }
 };
 export const login = async (req, res, next) => {
+  LogError('LogInEmail', req.body.email);
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
-
+    LogError(User, user);
     if (!user) return next(createError(404, 'User not found!'));
 
     const isCorrect = bcrypt.compareSync(req.body.password, user.password);
-    console.log(isCorrect);
-    if (!isCorrect)
-      return next(createError(400, 'Wrong password or username!'));
+    LogError('Password', isCorrect);
+    if (!isCorrect) return next(createError(400, 'Wrong password!'));
 
     const token = jwt.sign(
       {
@@ -51,14 +51,14 @@ export const login = async (req, res, next) => {
         expiresIn: process.env.JWT_LIFETIME,
       }
     );
-
-    const { password, ...info } = user._doc;
+    LogError('GenToken', token);
+    // const { password, ...info } = user._doc;
     res
       .cookie('accessToken', token, {
         httpOnly: true,
       })
       .status(200)
-      .send(info);
+      .send('Login successfully');
   } catch (err) {
     next(err);
   }
@@ -71,9 +71,7 @@ export const verifyOTP = async (req, res) => {
   try {
     const user = await User.findOne({ _id: userId });
     if (!userId || !otp) {
-      res.status(400).json({
-        massage: 'Empty otp details are not allowed',
-      });
+      next(createError(400, 'Empty OTP is not allowed'));
     } else {
       const UserOTPVerificationRecords = await UserOTPVerification.findOne({
         userId: userId,
@@ -81,13 +79,9 @@ export const verifyOTP = async (req, res) => {
       console.log(UserOTPVerificationRecords);
       if (!UserOTPVerificationRecords) {
         if (user.isVerified) {
-          res.status(400).json({
-            massage: 'Account already verified, please login',
-          });
+          next(createError(400, 'Account already verified, please login'));
         } else {
-          res.status(400).json({
-            massage: "Account record doesn't exist. Please sign up.",
-          });
+          next(createError(400, 'Account not found, please SignUp!'));
         }
       } else {
         // user otp record exists
@@ -97,18 +91,16 @@ export const verifyOTP = async (req, res) => {
           // user otp record has expired
           await UserOTPVerification.deleteMany({ userId });
           // throw Error("Code has expired. Please request again");
-          res.status(400).json({
-            massage: 'Code has expired. Please request again',
-          });
+          next(createError(400, 'OTP has expired but resend it!'));
         } else {
           const validOTP = await bcrypt.compare(otp, hashedOTP);
           console.log('validOTP', validOTP);
           if (!validOTP) {
             // supplied otp is wrong
             // throw new Error("Invalid code passed. Check your inbox");
-            res.status(400).json({
-              massage: 'Invalid code passed. Check your inbox',
-            });
+            next(
+              createError(400, 'Invalid Code Passed, Please Check your inbox!')
+            );
           } else {
             // success
             await User.updateOne({ _id: userId }, { isVerified: true });
@@ -136,12 +128,14 @@ export const verifyOTP = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    res.json(400).json('Please Enter Email!');
+    next(createError(400, 'Please Enter Email'));
   }
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.json(404).json('Invalid Email!Please try again with different email');
+      next(
+        createError(400, 'Invalid Email,please try again with different Email!')
+      );
     }
     const _id = user._id;
     sendOTPVerificationEmail({ _id, email }, res);
@@ -152,10 +146,7 @@ export const forgotPassword = async (req, res) => {
 
 export const logout = async (req, res) => {
   res
-    .clearCookie('accessToken', {
-      sameSite: 'none',
-      secure: true,
-    })
+    .clearCookie('accessToken', { httpOnly: true })
     .status(200)
     .send('User has been logged out.');
 };

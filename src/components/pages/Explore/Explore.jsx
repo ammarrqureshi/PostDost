@@ -93,7 +93,7 @@ const Explore = () => {
         </div>
 
         {/* Influencers */}
-        <div className="flex flex-row flex-wrap gap-10 relative">
+        <div className="flex flex-row flex-wrap gap-10 relative ml-2">
           {filteredData.length !== 0 ? (
             filteredData.map((person) => (
               <Link

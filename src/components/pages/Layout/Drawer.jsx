@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { MdOutlineTravelExplore } from 'react-icons/md';
 import { FiMessageCircle } from 'react-icons/fi';
 import { IoSettingsOutline } from 'react-icons/io5';
-import { MdOutlineAddBox } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
-import Cookies from 'js-cookie';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 //Internal Imports
 import logo from '../../../assets/logo.png';
 import Button from '../../UI/Button';
@@ -13,8 +13,23 @@ import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
 import { SidebarContext } from '../../../contexts/SidebarProvider';
 const SideDrawer = () => {
+  const navigate = useNavigate();
   const { isOpen, toggleDrawer, fName, sName, email } =
     useContext(SidebarContext);
+  const handleLogout = async () => {
+    try {
+      await axios
+        .post('http://localhost:8000/api/auth/logout', null, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res);
+          res.status === 200 && navigate('/');
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Drawer
       open={isOpen}
@@ -34,7 +49,7 @@ const SideDrawer = () => {
         <div className="flex flex-col items-center gap-1">
           <div className="w-[4.5rem] h-[4.5rem] relative object-contain gap-1">
             <img
-              src="/sidebar/dummyprofile.png"
+              src="/noavatar.png"
               alt=""
               className="w-full h-full rounded-full"
             />
@@ -80,13 +95,11 @@ const SideDrawer = () => {
             </div>
           </Link>
         </div>
-        <div className="mt-[67px] text-[2rem] text-[#ababab]">
-          <Link to="/login" onClick={() => Cookies.remove('token')}>
-            <div className="flex gap-2 items-center">
-              <CiLogout />
-              <p className="text-xl font-semibold">Logout</p>
-            </div>
-          </Link>
+        <div className="mt-[67px] text-[2rem] text-[#ababab] hover:cursor-pointer">
+          <div className="flex gap-2 items-center" onClick={handleLogout}>
+            <CiLogout />
+            <p className="text-xl font-semibold">Logout</p>
+          </div>
         </div>
       </div>
     </Drawer>

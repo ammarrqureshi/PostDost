@@ -5,7 +5,7 @@ import {
   forgotPassword,
   verifyOTP,
   logout,
-} from '../Controllers/auth.controller.js';
+} from '../controllers/auth.controller.js';
 
 const authRoutes = express.Router();
 

@@ -17,9 +17,13 @@ const LogIn = () => {
     const { email, password } = values;
     const apiUrl = import.meta.env.BASE_URL;
     await axios
-      .post('http://localhost:8000/api/auth/login', { email, password })
+      .post(
+        'http://localhost:8000/api/auth/login',
+        { email, password },
+        { withCredentials: true }
+      )
       .then((response) => {
-        response.status === 200 && navigate('/explore');
+        response.status === 200 && navigate("/explore");
       })
       .catch((error) => {
         setErrorText(error.response.data);

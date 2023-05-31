@@ -1,5 +1,5 @@
 import { connect } from 'mongoose';
-import LogError from '../Utils/LogError.js';
+import LogError from '../utils/LogError.js';
 
 const ConnectToMongoose = async (req, res) => {
   try {
@@ -20,4 +20,4 @@ const ConnectToMongoose = async (req, res) => {
   }
 };
 
-export default ConnectToMongoose
+export default ConnectToMongoose;

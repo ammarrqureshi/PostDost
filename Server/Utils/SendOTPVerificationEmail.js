@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import LogError from './LogError.js';
-import UserOTPVerification from '../Models/userOTPVerification.model.js';
+import UserOTPVerification from '../models/userOTPVerification.model.js';
 import bcrypt from 'bcrypt';
 import AWS from 'aws-sdk';
 
@@ -25,12 +25,12 @@ const sendOTPVerificationEmail = async ({ _id, email }, res, next) => {
         Body: {
           Text: {
             Data: `
-            <h1>PostDost</h1>
-            <p>Hello ${email},</p>
-            <p>Enter <b>${otp} </b> in the app to verify your email  address and complete verification your email:</p>
-            <p>This code <b> expires in 1 hour </b>. </p>
-            <p>If you did not request this, please ignore this email.</p>
-            <p>Thanks,<br>`,
+            PostDost
+            Hello ${email},
+            Enter ${otp} in the app to verify your email  address and complete verification your email:
+            This code expires in 1 hour . 
+            If you did not request this, please ignore this email.
+            Thanks`,
           },
         },
         Subject: {

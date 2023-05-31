@@ -23,14 +23,7 @@ const userSchema = new Schema(
       type: Boolean,
       required: true,
     },
-    // img: {
-    //   type: String,
-    //   required: false,
-    // },
-    // country: {
-    //   type: String,
-    // required: true,
-    // },
+
     isInfluencer: {
       type: Boolean,
       default: false,

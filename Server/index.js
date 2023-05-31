@@ -7,6 +7,7 @@ import app from './app.js';
 import ConnectToMongoose from './Db/index.js';
 import authRoutes from './routes/auth.route.js';
 import userRoutes from './routes/user.route.js';
+import influencerRoutes from './routes/influencer.route.js';
 import ErrorHandler from './middleware/globalErrorHandler.js';
 
 const MODE = process.env.NODE_ENV;
@@ -28,6 +29,7 @@ app.use(
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/influencer', influencerRoutes);
 
 //Error Handling Middleware
 ErrorHandler();

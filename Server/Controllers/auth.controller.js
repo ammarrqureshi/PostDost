@@ -23,6 +23,7 @@ export const register = async (req, res, next) => {
       })
       .catch((err) => {
         LogError('SAVING ACCOUNT', err);
+        next(err);
       });
     // res.status(201).send('User has been created.');
   } catch (err) {

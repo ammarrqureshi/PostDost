@@ -44,12 +44,31 @@ export const registerInfluencer = async (req, res, next) => {
   }
 };
 
-export const allInfluencer = async (req, res) => {
+export const allInfluencer = async (req, res, next) => {
   try {
     const Influencers = await Influencer.find({});
-    LogError('Influercers', Influencers);
-    res.status(200).json(Influencers);
+    if (!Influencers) {
+      next(createError(404, 'Influencers Not Found!'));
+    }
+    LogError('Influencers Found', Influencers);
+    res.status(200).send(Influencers);
   } catch (error) {
-    LogError('Finding Influencer', error);
+    LogError('Error in Finding Influencers', error);
+    next(error);
+  }
+};
+
+export const getInfluencerUsername = async (req, res) => {
+  const { influencerId } = req.params;
+  try {
+    const influencer = await Influencer.findOne({ _id: influencerId });
+    if (!influencer) {
+      LogError('No Influencer Username Fond', influencer);
+      next(createError(404, 'No Influencer Username Found!'));
+    }
+    res.status(200).json(influencer.username);
+  } catch (error) {
+    LogError('Error in Getting Influencer Username', error);
+    next(error);
   }
 };

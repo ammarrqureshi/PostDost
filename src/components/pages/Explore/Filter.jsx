@@ -3,7 +3,6 @@ import React, { useContext } from 'react';
 
 //Internal Imports
 import { ExploreContext } from '../../../contexts/ExploreContext';
-import Slider from '../../UI/Slider';
 import RangeSlider from '../../UI/RangeSlider';
 import Checkbox from '../../UI/Checkbox';
 

@@ -96,16 +96,13 @@ const Explore = () => {
         <div className="flex flex-row flex-wrap gap-10 relative ml-2">
           {filteredData.length !== 0 ? (
             filteredData.map((person) => (
-              <Link
-                key={person.id}
-                to={`http://localhost:5173/influencer/${person.id}`}
-              >
+              <Link key={person.id} to={`http://localhost:5173/${person.name}`}>
                 <Influencer {...person} />
               </Link>
             ))
           ) : (
             <div className="pt-10">
-              <h1 className="text-violet text-2xl font-bold ">
+              <h1 className="text-violet text-2xl font-bold">
                 No Person Found
               </h1>
             </div>

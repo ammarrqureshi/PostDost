@@ -27,7 +27,7 @@ const router = createBrowserRouter(
       <Route element={<Sidebar />}>
         {/* <Route  element={<Navigate to="/explore" />} /> */}
         <Route path="/explore" element={<Explore />} />
-        <Route path="/influencer/:id" element={<Influencer />} />
+        <Route path="/:username" element={<Influencer />} />
         <Route path="/contentmanager" element={<ContentManager />} />
 
         <Route

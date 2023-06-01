@@ -8,13 +8,13 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 
 const Influencer = () => {
-  const { id } = useParams();
+  const { username } = useParams();
   return (
     <UserProvider>
       <TabProvider>
         <InfluencerProvider>
           <section className={classes.influencerPage}>
-            <InfluencerCard influencerId={id} />
+            <InfluencerCard influencerName={username} />
             <InfluencerNavData />
           </section>
         </InfluencerProvider>

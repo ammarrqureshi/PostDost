@@ -11,11 +11,11 @@ import Button from '../../../UI/Button';
 import { Persons } from '../../../../constants/Influencer';
 
 function InfluencerCard(props) {
-  const { influencerId } = props;
+  const { influencerName } = props;
   const [influencer, setInfluencer] = useState('');
   const ctx = useContext(InfluencerContext);
   const findInfluencer = () => {
-    setInfluencer(Persons.find((person) => person.id === influencerId));
+    setInfluencer(Persons.find((person) => person.name === influencerName));
   };
   useEffect(() => {
     findInfluencer();

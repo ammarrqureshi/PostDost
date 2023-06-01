@@ -8,29 +8,29 @@ const influencerSchema = new Schema(
       ref: 'User',
       required: true,
     },
-    img: {
-      type: String,
-      required: false,
-    },
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+    // img: {
+    //   type: String,
+    //   required: false,
+    // },
+    // username: {
+    //   type: String,
+    //   required: true,
+    //   unique: true,
+    // },
     category: {
       type: String,
       enum: ['Web Developer', 'Digital Marketer', 'Social Media Influencer'],
       default: 'Web Developer',
     },
-    country: {
-      type: String,
-      required: true,
-    },
-    follower: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
+    // country: {
+    //   type: String,
+    //   required: true,
+    // },
+    // follower: {
+    //   type: Number,
+    //   required: true,
+    //   default: 0,
+    // },
     pricing: {
       type: Number,
       required: true,

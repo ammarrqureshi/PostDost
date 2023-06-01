@@ -27,7 +27,7 @@ const Sidebar = () => {
             }
           });
       } catch (error) {
-        // error.response.status === 401 && navigate('/');
+        error.response.status === 401 && navigate('/');
         console.log(error);
         console.log(error.response.status);
       }

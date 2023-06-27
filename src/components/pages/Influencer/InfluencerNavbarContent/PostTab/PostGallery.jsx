@@ -20,11 +20,11 @@ function PostGallery(){
         { id: 14, url: Image, alt: 'Image 3' },
         { id: 15, url: Image, alt: 'Image 4' },
       ];
-
+    
     return (
         <section className={classes.postGallery}>
         {images.map(arr=> <div key={arr.id} className={classes.imgWrapper}>
-        <img  src={arr.url} alt={arr.alt} /> 
+        <a href=""><img  src={arr.url} alt={arr.alt} /></a>
         </div> )}
         </section>
     )}

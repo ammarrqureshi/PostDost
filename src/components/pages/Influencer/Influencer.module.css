@@ -400,3 +400,131 @@ max-height:100vh;
 /* ?................................................................................. */
 
 /* !..Coming Soon Dummy text */
+
+
+
+/* ! .............................Buy Post Forms.................................. */
+
+.buyPostForm1{
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 35rem;
+    height: auto;
+    background-color: white;
+    row-gap: 2.5rem;
+    padding: 2.5rem 2rem;
+    border-radius: 10px;
+}
+
+
+/* .form1Heading{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 4rem;
+} */
+
+.buyFormHeading h1{
+    font-size: 1.6rem;
+    font-weight: var(--font-weight-bold);
+}
+
+.buyFormHeading span{
+    font-size: 3rem;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+}
+
+
+.buyFormHeading{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 12rem;
+}
+
+.addImageFile{
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+
+.addImageFile label{
+    font-weight:var(--font-weight-semibold);
+}
+
+/* ! ....Form 2 */
+.form2Grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form2Grid img{
+    width: 20rem;
+    height: auto;
+}
+
+.gridCaption{
+ display: flex;
+ flex-direction: column;
+ row-gap: 1rem;
+}
+
+.gridCaption textarea{
+    padding: 0.8rem 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    height: 100%;
+    resize: none;
+}
+
+.influencerProfileForm{
+    display: flex;
+    flex-direction: row;
+     align-items: center;
+     justify-content: flex-start;
+    column-gap: 1rem;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.influencerProfileForm p{
+    font-weight: var(--font-weight-bold);
+}
+
+.influencerProfileForm img{
+   width: 3rem;
+   height: auto;
+}
+
+
+/* !....... Form 3 */
+
+.paymentField{
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.3rem;
+}
+
+.paymentField label{
+    font-weight:var(--font-weight-semibold);
+  }
+
+.paymentField >input{
+    border: 1.5px solid rgba(0, 0, 0, 0.3);
+    padding: 1rem 1rem;
+    border-radius: 5px;
+    font-weight:var(--font-weight-medium);
+    width: 30rem;
+    max-width: 100%;
+}
+
+.addPaymentFields{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.4rem;
+}

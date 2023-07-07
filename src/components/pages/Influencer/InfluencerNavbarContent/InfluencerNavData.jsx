@@ -4,6 +4,7 @@ import InfluencerNavbar from './InfluencerNavbar';
 import React ,{ useContext } from 'react';
 import { TabContext } from '../../../../contexts/TabProvider';
 import PricingTab from './PricingTab/PricingTab';
+import UserProvider from '../../../../contexts/UserProvider';
 
 function InfluencerNavData(){
 const tabContext=useContext(TabContext);
@@ -17,10 +18,13 @@ const tabContent=[
 ]
 
 return(
+      <UserProvider>
        <section className={classes.influencerNavData}>
           <InfluencerNavbar></InfluencerNavbar>
           {tabContent[activeTab]}
         </section>
+      </UserProvider>
+
 )}
 
 export default InfluencerNavData;

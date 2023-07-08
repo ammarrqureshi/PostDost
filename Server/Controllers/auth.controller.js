@@ -23,11 +23,17 @@ export const register = async (req, res, next) => {
       })
       .catch((err) => {
         LogError('SAVING ACCOUNT', err);
-        next(err);
+        res.json({
+          message: 'LogIn failed,Please try again later!',
+          success: false,
+        });
       });
     // res.status(201).send('User has been created.');
   } catch (err) {
-    next(err);
+    res.json({
+      message: 'Server Error,Please try again later!',
+      success: false,
+    });
   }
 };
 export const login = async (req, res, next) => {
@@ -36,11 +42,19 @@ export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     LogError(User, user);
-    if (!user) return next(createError(404, 'User not found!'));
+    if (!user)
+      return res.json({
+        message: 'User not found,try different email!',
+        success: false,
+      });
 
     const isCorrect = bcrypt.compareSync(req.body.password, user.password);
     LogError('Password', isCorrect);
-    if (!isCorrect) return next(createError(400, 'Wrong password!'));
+    if (!isCorrect)
+      return res.json({
+        message: 'Wrong Password,please enter correct password!',
+        success: false,
+      });
 
     const token = jwt.sign(
       {
@@ -58,10 +72,12 @@ export const login = async (req, res, next) => {
       .cookie('accessToken', token, {
         httpOnly: true,
       })
-      .status(200)
-      .send('Login successfully');
+      .json({ message: 'Login successfully' });
   } catch (err) {
-    next(err);
+    res.json({
+      message: 'Server Error,Please try again later!',
+      success: false,
+    });
   }
 };
 
@@ -72,7 +88,10 @@ export const verifyOTP = async (req, res) => {
   try {
     const user = await User.findOne({ _id: userId });
     if (!userId || !otp) {
-      next(createError(400, 'Empty OTP is not allowed'));
+      res.json({
+        message: 'Empty OTP is not allowed!',
+        success: false,
+      });
     } else {
       const UserOTPVerificationRecords = await UserOTPVerification.findOne({
         userId: userId,
@@ -80,9 +99,15 @@ export const verifyOTP = async (req, res) => {
       console.log(UserOTPVerificationRecords);
       if (!UserOTPVerificationRecords) {
         if (user.isVerified) {
-          next(createError(400, 'Account already verified, please login'));
+          res.json({
+            message: 'Account already verified, please login!',
+            success: false,
+          });
         } else {
-          next(createError(400, 'Account not found, please SignUp!'));
+          res.json({
+            message: 'Account not found, please SignUp!',
+            success: false,
+          });
         }
       } else {
         // user otp record exists
@@ -92,29 +117,32 @@ export const verifyOTP = async (req, res) => {
           // user otp record has expired
           await UserOTPVerification.deleteMany({ userId });
           // throw Error("Code has expired. Please request again");
-          next(createError(400, 'OTP has expired but resend it!'));
+          res.json({
+            message: 'OTP Expired, resend it!',
+            success: false,
+          });
         } else {
           const validOTP = await bcrypt.compare(otp, hashedOTP);
           console.log('validOTP', validOTP);
           if (!validOTP) {
-            // supplied otp is wrong
-            // throw new Error("Invalid code passed. Check your inbox");
-            next(
-              createError(400, 'Invalid Code Passed, Please Check your inbox!')
-            );
+            res.json({
+              message: 'Invalid Code Passed, Please Check your inbox!',
+              success: false,
+            });
           } else {
             // success
             await User.updateOne({ _id: userId }, { isVerified: true });
 
             await UserOTPVerification.deleteMany({ userId });
             const userDetails = await User.findOne({ _id: userId });
-            res.status(200).json({
+            res.json({
               massage: 'Your email has been verified',
               data: {
                 userDetails,
                 userId,
                 email: UserOTPVerificationRecords.email,
               },
+              success: true,
             });
           }
         }
@@ -122,32 +150,42 @@ export const verifyOTP = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error });
+    res.json({
+      message: 'Server Error,Please try again later!',
+      success: false,
+    });
   }
 };
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    next(createError(400, 'Please Enter Email'));
+    res.json({ message: 'Please Enter Email!', success: false });
+    return;
   }
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      next(
-        createError(400, 'Invalid Email,please try again with different Email!')
-      );
+      res.json({
+        message: 'Invalid Email,please try again with different Email!',
+        success: false,
+      });
+      return;
     }
     const _id = user._id;
     sendOTPVerificationEmail({ _id, email }, res);
   } catch (error) {
     LogError('ForgotPassword ', error);
+    res.json({
+      message: 'Server Error,Please try again later!',
+      success: false,
+    });
   }
 };
 
 export const logout = async (req, res) => {
-  res
-    .clearCookie('accessToken', { httpOnly: true })
-    .status(200)
-    .send('User has been logged out.');
+  res.clearCookie('accessToken', { httpOnly: true }).status(200).json({
+    message: 'Logout Successfully!',
+    success: true,
+  });
 };

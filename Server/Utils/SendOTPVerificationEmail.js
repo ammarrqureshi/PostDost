@@ -1,14 +1,8 @@
-import nodemailer from 'nodemailer';
+import User from '../models/user.model.js';
 import LogError from './LogError.js';
 import UserOTPVerification from '../models/userOTPVerification.model.js';
 import bcrypt from 'bcrypt';
-import AWS from 'aws-sdk';
-
-const ses = new AWS.SES({
-  accessKeyId: 'AKIA3GQDWZUM4VNJ6B3E',
-  secretAccessKey: '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',
-  region: 'us-east-1',
-});
+import sendMail from './sendMail.js';
 
 const sendOTPVerificationEmail = async ({ _id, email }, res, next) => {
   const newEmail = email.toString();
@@ -16,29 +10,27 @@ const sendOTPVerificationEmail = async ({ _id, email }, res, next) => {
   try {
     const otp = `${Math.floor(100000 + Math.random() * 9000)}`;
     LogError('Generated OTP', otp);
-    const params = {
-      Source: 'ehsanellahiofficial@gmail.com',
-      Destination: {
-        ToAddresses: [email],
-      },
-      Message: {
-        Body: {
-          Text: {
-            Data: `
-            PostDost
-            Hello ${email},
-            Enter ${otp} in the app to verify your email  address and complete verification your email:
-            This code expires in 1 hour . 
-            If you did not request this, please ignore this email.
-            Thanks`,
-          },
-        },
-        Subject: {
-          Data: 'Verify Your Email',
-        },
-      },
-    };
-    await ses.sendEmail(params).promise();
+    if (otp && email) {
+      sendMail(
+        'ehsanellahiofficial@gmail.com',
+        email,
+        '[POSTDOST OTP VERIFICATION]!',
+        `Hello, Your OTP : ${otp}!`,
+        (error) => {
+          if (!error) {
+          } else {
+            response.json({
+              message: 'Error,Please Try Again...!',
+              success: false,
+            });
+          }
+        }
+      );
+    } else {
+      await User.deleteOne({ newEmail });
+      res.json({ message: 'Failed to send OTP on email!' });
+    }
+
     console.log(`OTP email sent to ${email}`);
     const saltRounds = 10;
     const hashedOTP = await bcrypt.hash(otp, saltRounds);
@@ -49,9 +41,11 @@ const sendOTPVerificationEmail = async ({ _id, email }, res, next) => {
       expiresAt: Date.now() + 3600000,
     });
     await newOTPVerification.save();
-    res.status(200).send({ userId: _id, email });
+    res.json({ userId: _id, email, success: true });
   } catch (error) {
-    LogError('FAILED OTP SENDING VERIFICATON', error);
+    await User.deleteOne({ email });
+    LogError('FAILED OTP SENDING VERIFICATION', error);
+    res.json({ message: 'Server error,Please try again!' });
   }
 };
 

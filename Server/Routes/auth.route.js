@@ -9,7 +9,7 @@ import {
 
 const authRoutes = express.Router();
 
-authRoutes.post('/register', register);
+authRoutes.post('/signup', register);
 authRoutes.post('/login', login);
 authRoutes.post('/forgotpassword', forgotPassword);
 authRoutes.post('/verifyOTP', verifyOTP);

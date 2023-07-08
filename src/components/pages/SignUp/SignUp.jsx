@@ -30,7 +30,7 @@ const SignUp = () => {
         //  const {email} = response
         console.log(response.data.userId);
         // setLoad(false);
-        if (response.status == 200) {
+        if (response.data.success) {
           const userId = response.data.userId;
           const email = response.data.email;
           navigate(

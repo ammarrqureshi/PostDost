@@ -12,8 +12,17 @@ import { ExploreContext } from '../../../contexts/ExploreContext';
 import TopLines from '../../UI/TopLines';
 import TextField from '../../UI/TextField';
 
+import { apiGetCall } from '../../../utils/API';
 const Explore = () => {
   const [showFilter, setShowFilter] = useState(false);
+  const [influencers, setInfluencers] = useState([]);
+  console.log(influencers);
+  useEffect(() => {
+    (async () => {
+      const res = await apiGetCall('/influencer');
+      setInfluencers(res.Influencers);
+    })();
+  }, []);
   const {
     Persons,
     filterText,
@@ -48,9 +57,6 @@ const Explore = () => {
     });
     setFilteredData(filtered);
   };
-  // useEffect(() => {
-  //   handleFilters();
-  // }, [category, priceRange, follower]);
 
   return (
     <>
@@ -95,11 +101,17 @@ const Explore = () => {
         {/* Influencers */}
         <div className="flex flex-row flex-wrap gap-10 relative ml-2">
           {filteredData.length !== 0 ? (
-            filteredData.map((person) => (
-              <Link key={person.id} to={`http://localhost:5173/${person.name}`}>
-                <Influencer {...person} />
-              </Link>
-            ))
+            influencers?.map((person) => {
+              console.log(person);
+              return (
+                <Link
+                  key={person._id}
+                  to={`http://localhost:5173/${person.username}`}
+                >
+                  <Influencer {...person} />
+                </Link>
+              );
+            })
           ) : (
             <div className="pt-10">
               <h1 className="text-violet text-2xl font-bold">

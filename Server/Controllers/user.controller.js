@@ -14,7 +14,9 @@ export const deleteUser = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   LogError('Request', req);
   LogError('ReqUserId', req.userId);
-  const { _id } = req.userId;
-  const user = await User.findById(_id);
-  res.json({ user, success: true });
+  const _id = req?.userId;
+  const user = await User.findById({ _id });
+  const { email, firstName, secondName, isVerified } = user;
+  const userInfo = { email, firstName, secondName, isVerified };
+  res.json({ userInfo, success: true });
 };

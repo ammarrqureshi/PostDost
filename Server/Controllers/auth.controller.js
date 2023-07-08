@@ -80,7 +80,7 @@ export const login = async (req, res, next) => {
         httpOnly: true,
         expires: expirationDate,
       })
-      .json({ message: 'Login successfully' });
+      .json({ message: 'Login successfully', success: true });
   } catch (err) {
     res.json({
       message: 'Server Error,Please try again later!',
@@ -192,8 +192,8 @@ export const forgotPassword = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie('accessToken', { httpOnly: true }).status(200).json({
-    message: 'Logout Successfully!',
-    success: true,
-  });
+  res
+    .clearCookie('accessToken', { httpOnly: true })
+    .status(200)
+    .json({ message: 'User has been logged out.' });
 };

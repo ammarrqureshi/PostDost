@@ -20,8 +20,8 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (values, actions) => {
-    const {password} = values;
-   onst res = await apiPostCall('/auth/resetpassword', {
+    const { password } = values;
+    const res = await apiPostCall('/auth/resetpassword', {
       password,
     });
     setLoading(false);
@@ -30,7 +30,7 @@ const ResetPassword = () => {
         type: 'success',
         message: 'Password Changes Successfully,Please Login!',
       });
-      navigate("/login");
+      navigate('/login');
     } else {
       ToastMessage({
         type: 'error',
@@ -88,7 +88,6 @@ const ResetPassword = () => {
             className="grid gap-6 pt-16 w-80 text-sm"
             onSubmit={handleSubmit}
           >
-            
             {errors.password && touched.password && (
               <p className="text-red">{errors.password}</p>
             )}
@@ -133,7 +132,9 @@ const ResetPassword = () => {
                 {passwordVisibility ? <AiFillEye /> : <AiFillEyeInvisible />}
               </div>
             </div>
-            <Button type="submit">{loading ? <Spinner size={16} /> : 'Reset Password'}</Button>
+            <Button type="submit">
+              {loading ? <Spinner size={16} /> : 'Reset Password'}
+            </Button>
           </form>
         </div>
         {/* LeftSide */}

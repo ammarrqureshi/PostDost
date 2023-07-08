@@ -6,7 +6,6 @@ import SignUp from '../components/pages/SignUp';
 import LogIn from '../components/pages/LogIn/LogIn';
 import ForgotPassword from '../components/pages/ResetPassword/ForgotPassword';
 import ResetPassword from '../components/pages/ResetPassword/ResetPassword';
-import ForgotPasswordProvider from '../contexts/ForgotPassword';
 import ConfirmPage from '../components/pages/LogIn/ConfirmPage';
 import Home from '../components/pages/Home';
 import {

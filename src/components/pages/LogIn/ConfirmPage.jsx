@@ -56,11 +56,6 @@ const ConfirmPage = () => {
             onSubmit={handleSubmit}
             className="grid gap-6 pt-16 w-80 text-sm"
           >
-            {errorText && (
-              <p className="text-red text-xl max-w-[540px] font-semibold pb-4">
-                {errorText}
-              </p>
-            )}
             <div className="flex verification-wrapper">
               <VerificationInput
                 classNames={{

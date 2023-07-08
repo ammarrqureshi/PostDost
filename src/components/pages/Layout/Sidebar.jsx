@@ -1,39 +1,44 @@
 import React, { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 import { MdOutlineTravelExplore } from 'react-icons/md';
 import { FiMessageCircle } from 'react-icons/fi';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { MdOutlineAddBox } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
+
 import { SidebarContext } from '../../../contexts/SidebarProvider';
+import MainContext from '../../../contexts/MainContext';
 import SideDrawer from './Drawer';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const { isOpen, toggleDrawer, setFName, setSName, setEmail } =
     useContext(SidebarContext);
-  useEffect(() => {
-    const user = async () => {
-      try {
-        await axios
-          .get('http://localhost:8000/api/users', { withCredentials: true })
-          .then((response) => {
-            // response.status === 200 && console.log(response);
-            if (response) {
-              setFName(response.data.firstName);
-              setSName(response.data.secondName);
-              setEmail(response.data.email);
-            }
-          });
-      } catch (error) {
-        error.response.status === 401 && navigate('/');
-        console.log(error);
-        console.log(error.response.status);
-      }
-    };
-    user();
-  }, []);
+  const { userInformation, setUserInformation } = useContext(MainContext);
+  const { email, firstName, secondName } = userInformation;
+  if (userInformation) {
+    setFName(firstName);
+    setSName(secondName);
+    setEmail(email);
+  }
+
+  const handleLogout = async () => {
+    const res = await apiGetCall('/auth/logout');
+    if (res.success) {
+      ToastMessage({
+        type: 'success',
+        message: res.message,
+      });
+      setUserInformation({
+        email: '',
+        firstName: '',
+        secondName: '',
+        isVerified: '',
+      });
+      navigate('/');
+    }
+  };
   return (
     <>
       <aside
@@ -65,7 +70,7 @@ const Sidebar = () => {
           <IoSettingsOutline />
         </div>
         <div className="mt-8 text-[2rem] text-[#ababab]">
-          <Link to="/login" onClick={() => Cookies.remove('token')}>
+          <Link to="/login" onClick={handleLogout}>
             <CiLogout />
           </Link>
         </div>

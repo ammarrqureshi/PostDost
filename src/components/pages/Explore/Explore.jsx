@@ -54,7 +54,7 @@ const Explore = () => {
 
   return (
     <>
-      <section className="pt-16 pl-[7rem] relative max-w-[89%]">
+      <section className="pt-16 pl-[7rem] relative max-w-[89%] overflow-hidden">
         <TopLines right="-right-36" />
         <div className="flex flex-row justify-between max-w-full mb-10">
           <h1 className="font-bold text-[2.5rem] leading-10">Explore</h1>

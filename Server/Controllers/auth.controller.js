@@ -1,13 +1,18 @@
 import User from '../models/user.model.js';
-import createError from '../utils/createError.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import sendOTPVerificationEmail from '../utils/SendOTPVerificationEmail.js';
 import UserOTPVerification from '../models/userOTPVerification.model.js';
 import LogError from '../utils/LogError.js';
 
-export const register = async (req, res, next) => {
+export const register = async (req, res) => {
+  const { email } = req?.body;
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      res.json({ message: 'User already exists' });
+      return;
+    }
     const hashedPassword = bcrypt.hashSync(req.body.password, 5);
     const newUser = new User({
       ...req.body,
@@ -30,6 +35,7 @@ export const register = async (req, res, next) => {
       });
     // res.status(201).send('User has been created.');
   } catch (err) {
+    LogError('[SIGNUPAPIERROR]', err);
     res.json({
       message: 'Server Error,Please try again later!',
       success: false,
@@ -67,10 +73,12 @@ export const login = async (req, res, next) => {
       }
     );
     LogError('GenToken', token);
-    // const { password, ...info } = user._doc;
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 7);
     res
       .cookie('accessToken', token, {
         httpOnly: true,
+        expires: expirationDate,
       })
       .json({ message: 'Login successfully' });
   } catch (err) {

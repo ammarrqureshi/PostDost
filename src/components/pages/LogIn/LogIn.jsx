@@ -1,36 +1,42 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
-import axios from 'axios';
+
 import { useFormik } from 'formik';
-import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
-import { FaGoogle } from 'react-icons/fa';
-import logo from '../../../assets/logo.png';
-import TextField from '../../UI/TextField';
-import Button from '../../UI/Button';
 import { initialValues, loginSchema } from './LogInSchema';
 
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+import { FaGoogle } from 'react-icons/fa';
+
+import logo from '../../../assets/logo.png';
+
+import TextField from '../../UI/TextField';
+import Button from '../../UI/Button';
+
+import { apiPostCall } from '../../../utils/API';
+import ToastMessage from '../../../utils/ToastNotification';
+import Spinner from '../../../utils/Spinner';
+
 const LogIn = () => {
-  const [errorText, setErrorText] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const onSubmit = async (values, actions) => {
     const { email, password } = values;
-    const apiUrl = import.meta.env.BASE_URL;
-    await axios
-      .post(
-        'http://localhost:8000/api/auth/login',
-        { email, password },
-        { withCredentials: true }
-      )
-      .then((response) => {
-        response.status === 200 && navigate("/explore");
-      })
-      .catch((error) => {
-        setErrorText(error.response.data);
-        setTimeout(() => {
-          setErrorText('');
-        }, 1000);
+    setLoading(true);
+    const res = await apiPostCall('/auth/login', {
+      email,
+      password,
+    });
+    setLoading(false);
+    if (res.success) {
+      navigate('/explore');
+    } else {
+      ToastMessage({
+        type: 'error',
+        message: res.message,
       });
+      return;
+    }
   };
 
   const {
@@ -66,11 +72,6 @@ const LogIn = () => {
           </div>
           <div className="grid gap-6 pt-16 w-80 text-sm">
             <form onSubmit={handleSubmit} autoComplete="off">
-              {errorText && (
-                <p className="text-red text-xl max-w-[540px] font-semibold pb-4">
-                  {errorText}
-                </p>
-              )}
               {errors.email && touched.email && (
                 <p className="text-red">{errors.email}</p>
               )}
@@ -116,11 +117,11 @@ const LogIn = () => {
                 style={{ width: '25rem', marginTop: '1rem' }}
                 disabled={isSubmitting}
               >
-                LogIn
+                {loading ? <Spinner size={16} /> : 'Log In'}
               </Button>
             </form>
             <p className="text-center">
-              Dont' have account?
+              Do not have account?
               <span className="font-bold text-black text">
                 <Link to="/signup">Sign up</Link>
               </span>

@@ -1,33 +1,42 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import VerificationInput from 'react-verification-input';
-import logo from '../../../assets/logo.png';
-import Button from '../../UI/Button';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
+import logo from '../../../assets/logo.png';
+
+import Button from '../../UI/Button';
+
+import { apiPostCall } from '../../../utils/API';
+import ToastMessage from '../../../utils/ToastNotification';
+import Spinner from '../../../utils/Spinner';
+
 const ConfirmPage = () => {
+  const [loading, setLoading] = useState(false);
+  const [otpNumber, setOTP] = useState(null);
   const navigate = useNavigate();
+
   const queryParams = new URLSearchParams(location.search);
   const email = queryParams.get('email');
   const userId = queryParams.get('i');
-  const [errorText, setErrorText] = useState('');
-  const [otpNumber, setOTP] = useState(null);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const apiUrl = import.meta.env.BASE_URL;
-    await axios
-      .post('http://localhost:8000/api/auth/verifyOTP', { userId, otpNumber })
-      .then((response) => {
-        response.status === 200 && navigate('/login');
-      })
-
-      .catch((error) => {
-        console.log(error);
-        // setErrorText(error.response.data);
-        setTimeout(() => {
-          setErrorText('');
-        }, 1000);
+    setLoading(true);
+    const res = await apiPostCall('auth/verifyOTP', {
+      userId,
+      otpNumber,
+    });
+    setLoading(false);
+    if (res.success) {
+      navigate('/login');
+    } else {
+      ToastMessage({
+        type: 'error',
+        message: res.message,
       });
+      return;
+    }
   };
 
   return (
@@ -70,7 +79,7 @@ const ConfirmPage = () => {
             </div>
 
             <Button type="submit" style={{ width: '25rem', marginTop: '1rem' }}>
-              Submit
+              {loading ? <Spinner size={16} /> : 'Submit'}
             </Button>
             <p className="text-end font-bold ">Resend OTP</p>
           </form>

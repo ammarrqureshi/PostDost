@@ -1,53 +1,56 @@
 import React, { useState, useContext, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { FaGoogle } from 'react-icons/fa';
+
 import logo from '../../../assets/logo.png';
+
 import Checkbox from '../../UI/SignUpCheckbox';
 import TextField from '../../UI/TextField';
 import Button from '../../UI/Button';
-import Cookies from 'js-cookie';
+
 import { useFormik } from 'formik';
-import axios from 'axios';
 import { signupSchema, initialValues } from './InitialValueAndSchema';
-import { useNavigate } from 'react-router-dom';
+
+import { apiPostCall } from '../../../utils/API';
+import ToastMessage from '../../../utils/ToastNotification';
+import Spinner from '../../../utils/Spinner';
+
 const SignUp = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [errorText, setErrorText] = useState('');
+
   const onSubmit = async (values, actions) => {
+    setLoading(true);
     const { firstName, secondName, email, password, agreement } = values;
-    // setLoad(true);
-    const apiUrl = import.meta.env.REACT_APP_API_URL;
-    axios
-      .post('http://localhost:8000/api/auth/register', {
-        firstName,
-        secondName,
-        email,
-        password,
-        agreement,
-      })
-      .then((response) => {
-        //  const {email} = response
-        console.log(response.data.userId);
-        // setLoad(false);
-        if (response.data.success) {
-          const userId = response.data.userId;
-          const email = response.data.email;
-          navigate(
-            `/confirmpage?email=${encodeURIComponent(
-              email
-            )}&i=${encodeURIComponent(userId)}`
-          );
-        }
-      })
-      .catch((error) => {
-        // setLoad(false);
-        console.log(error);
-        setErrorText(error.response?.data);
-        setTimeout(() => {
-          setErrorText('');
-        }, 3000);
+    const res = await apiPostCall('/auth/signup', {
+      firstName,
+      secondName,
+      email,
+      password,
+      agreement,
+    });
+    setLoading(false);
+    if (res.success) {
+      const { userId, email } = res;
+      ToastMessage({
+        type: 'success',
+        message: 'Check your email for OTP',
       });
+      navigate(
+        `/confirmpage?email=${encodeURIComponent(email)}&i=${encodeURIComponent(
+          userId
+        )}`
+      );
+    } else {
+      ToastMessage({
+        type: 'error',
+        message: res.message,
+      });
+      return;
+    }
   };
 
   const {
@@ -87,11 +90,6 @@ const SignUp = () => {
             onSubmit={handleSubmit}
             autoComplete="off"
           >
-            {errorText && (
-              <p className="text-red text-xl max-w-[540px] font-semibold pb-4">
-                {errorText}
-              </p>
-            )}
             {touched.firstName && errors.firstName && (
               <p className="text-red">{errors.firstName}</p>
             )}
@@ -171,7 +169,7 @@ const SignUp = () => {
               isError={touched.agreement && errors.agreement}
             />
             <Button type="submit" disabled={isSubmitting}>
-              Create Account
+              {loading ? <Spinner size={16} /> : 'Create Account'}
             </Button>
           </form>
           <p className="text-center">

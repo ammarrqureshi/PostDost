@@ -1,40 +1,49 @@
 import React, { useState } from 'react';
-import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 import logo from '../../../assets/logo.png';
+
 import TextField from '../../UI/TextField';
 import Button from '../../UI/Button';
+
 import * as yup from 'yup';
-import axios from 'axios';
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+
+import { apiPostCall } from '../../../utils/API';
+import ToastMessage from '../../../utils/ToastNotification';
+import Spinner from '../../../utils/Spinner';
+
 const ForgotPassword = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  console.log(apiUrl);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [errorText, setErrorText] = useState('');
+
   const onSubmit = async (values, actions) => {
     const { email } = values;
+    setLoading(true);
 
-    await axios
-      .post('http://localhost:8000/api/auth/forgotpassword', { email })
-      .then((response) => {
-        if (response.status == 200) {
-          const userId = response.data.userId;
-          const email = response.data.email;
-          navigate(
-            `/confirmpage?email=${encodeURIComponent(
-              email
-            )}&i=${encodeURIComponent(userId)}`
-          );
-        }
-      })
-      .catch((error) => {
-        setErrorText(error.response.data);
-        setTimeout(() => {
-          setErrorText('');
-        }, 2000);
+    const res = await apiPostCall('/auth/forgotpassword', {
+      email,
+    });
+    setLoading(false);
+    if (res.success) {
+      const { userId, email } = res;
+      ToastMessage({
+        type: 'success',
+        message: 'Check your email for OTP',
       });
+      navigate(
+        `/confirmpage?email=${encodeURIComponent(email)}&i=${encodeURIComponent(
+          userId
+        )}`
+      );
+    } else {
+      ToastMessage({
+        type: 'error',
+        message: res.message,
+      });
+      return;
+    }
   };
 
   const initialValues = {
@@ -77,11 +86,6 @@ const ForgotPassword = () => {
             onSubmit={handleSubmit}
             className="grid gap-6 pt-16 w-80 text-sm"
           >
-            {errorText && (
-              <p className="text-red text-xl max-w-[540px] font-semibold pb-4">
-                {errorText}
-              </p>
-            )}
             {errors.email && touched.email && (
               <p className="text-red">{errors.email}</p>
             )}
@@ -97,7 +101,7 @@ const ForgotPassword = () => {
               style={{ marginBottom: '1rem', width: '25rem' }}
             />
             <Button type="submit" style={{ width: '25rem', marginTop: '1rem' }}>
-              Forgot Password
+              {loading ? <Spinner size={16} /> : 'Forgot Password'}
             </Button>
             <p className="text-l">
               Dont' have account?

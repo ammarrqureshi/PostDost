@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const Instance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: 'http://localhost:8000/api',
   headers: {
     'Content-type': 'application/json',
   },
@@ -12,7 +12,7 @@ export const apiPostCall = (path, params) => {
     withCredentials: true,
   };
   return Instance.post(path, params, config)
-    .then((res) => res.data)
+    .then((res) => res?.data)
     .catch((Err) => {
       return { isError: true, Error: Err };
     });

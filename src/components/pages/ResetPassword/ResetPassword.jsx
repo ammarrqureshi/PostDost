@@ -1,31 +1,43 @@
 import React, { useState } from 'react';
-import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
+
+import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+
 import logo from '../../../assets/logo.png';
+
 import TextField from '../../UI/TextField';
 import Button from '../../UI/Button';
+
 import * as yup from 'yup';
-import axios from 'axios';
 import { useFormik } from 'formik';
+
+import { apiPostCall } from '../../../utils/API';
+import ToastMessage from '../../../utils/ToastNotification';
+import Spinner from '../../../utils/Spinner';
+
 const ResetPassword = () => {
-  const [errorText, setErrorText] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (values, actions) => {
-    const apiUrl = import.meta.env.BASE_URL;
-    const { password } = values;
-    await axios
-      .post(`${apiUrl}/user/resetpassword`, {})
-      .then((response) => {
-        console.log(response);
-        response.status === 200 && navigate('/login');
-      })
-      .catch((error) => {
-        setErrorText(error.response.data);
-        setTimeout(() => {
-          setErrorText('');
-        }, 1000);
+    const {password} = values;
+   onst res = await apiPostCall('/auth/resetpassword', {
+      password,
+    });
+    setLoading(false);
+    if (res.success) {
+      ToastMessage({
+        type: 'success',
+        message: 'Password Changes Successfully,Please Login!',
       });
+      navigate("/login");
+    } else {
+      ToastMessage({
+        type: 'error',
+        message: res.message,
+      });
+      return;
+    }
   };
   const passwordRegex =
     /^(?=.*[!@#$%^&*()\-_=+{};:,<.>/?])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$/;
@@ -76,11 +88,7 @@ const ResetPassword = () => {
             className="grid gap-6 pt-16 w-80 text-sm"
             onSubmit={handleSubmit}
           >
-            {errorText && (
-              <p className="text-red text-xl max-w-[540px] font-semibold pb-4">
-                {errorText}
-              </p>
-            )}
+            
             {errors.password && touched.password && (
               <p className="text-red">{errors.password}</p>
             )}
@@ -125,7 +133,7 @@ const ResetPassword = () => {
                 {passwordVisibility ? <AiFillEye /> : <AiFillEyeInvisible />}
               </div>
             </div>
-            <Button type="submit">Submit</Button>
+            <Button type="submit">{loading ? <Spinner size={16} /> : 'Reset Password'}</Button>
           </form>
         </div>
         {/* LeftSide */}

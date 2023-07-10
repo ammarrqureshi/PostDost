@@ -4,12 +4,12 @@ const { Schema } = mongoose;
 const paymentSchema = new Schema({});
 
 const postSchema = new Schema({
-  userId: {
+  createdByUser: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  influencerId: {
+  createdForInfluencer: {
     type: mongoose.Types.ObjectId,
     ref: 'Influencer',
     required: true,

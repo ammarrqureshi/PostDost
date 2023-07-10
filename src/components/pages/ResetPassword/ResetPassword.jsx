@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
-import logo from '../../../assets/logo.png';
+import logo from '../../../assets/guestpostlogo.svg';
 
 import TextField from '../../UI/TextField';
 import Button from '../../UI/Button';

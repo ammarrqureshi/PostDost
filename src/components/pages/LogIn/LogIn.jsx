@@ -7,7 +7,7 @@ import { initialValues, loginSchema } from './LogInSchema';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { FaGoogle } from 'react-icons/fa';
 
-import logo from '../../../assets/logo.png';
+import logo from '../../../assets/guestpostlogo.svg';
 
 import TextField from '../../UI/TextField';
 import Button from '../../UI/Button';

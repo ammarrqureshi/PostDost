@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import VerificationInput from 'react-verification-input';
 import { useNavigate } from 'react-router-dom';
 
-import logo from '../../../assets/logo.png';
+import logo from '../../../assets/guestpostlogo.svg';
 
 import Button from '../../UI/Button';
 

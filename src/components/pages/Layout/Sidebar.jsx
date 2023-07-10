@@ -48,7 +48,10 @@ const Sidebar = () => {
         onClick={toggleDrawer}
       >
         <div className="pt-7">
-          <img src="/sidebar/logo.png" alt="Logo" />
+          <img
+            src="/guestpostlogo.svg"
+            alt="Logo"
+          />
         </div>
         <div className="w-14 h-14 relative">
           <img

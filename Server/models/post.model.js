@@ -14,10 +14,15 @@ const postSchema = new Schema({
     ref: 'Influencer',
     required: true,
   },
-  // influencerUserName: {
-  //   type: String,
-  //   required: true,
-  // },
+  createdByUserName: {
+    type: String,
+    required: true,
+  },
+  createdByUserCategory: {
+    type: String,
+    required: false,
+    default: null,
+  },
   media: {
     type: [String],
     required: false,

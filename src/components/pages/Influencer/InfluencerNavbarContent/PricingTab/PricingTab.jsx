@@ -9,7 +9,7 @@ function PricingTab(){
   const activePricingTab=ctx.activePricingTab;
 
   const pricingContent=[
-    <BuyPost></BuyPost>,
+    <BuyPost/>,
     <p>Coming Soon.....</p>,
     <p>Coming Soon.....</p>
   ]

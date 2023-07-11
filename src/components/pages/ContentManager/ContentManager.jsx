@@ -1,19 +1,23 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-// Internal Data
+import React, { useState, useEffect } from 'react';
+
 import Post from './Posts';
-import { Posts } from '../../../constants/Post';
-import { useState } from 'react';
+import { apiGetCall } from '../../../utils/API';
+import MainContext from '../../../contexts/MainContext';
+import { useContext } from 'react';
 
 const ContentManager = () => {
-  const [open, setOpen] = React.useState(false);
-  const [modalId, setModalId] = useState(null);
-  const handleModalInfo = (id) => {
-    setModalId(id);
-  };
+  const [posts, setPosts] = useState([]);
+  const [isUserInfluencer, setIsUserInfluencer] = useState(false);
+  const { userInformation, setUserInformation } = useContext(MainContext);
+  console.log(userInformation);
+  useEffect(() => {
+    (async () => {
+      const res = await apiGetCall('/post');
+      console.log(res);
+      setPosts(res.Posts);
+    })();
+  }, []);
+
   return (
     <section className="pt-16 pl-[7rem]">
       {/* <TopLines right="-right-36" /> */}
@@ -26,20 +30,31 @@ const ContentManager = () => {
               <p className="text-red text-base font-bold">Reject All</p>
             </div>
           </div>
-          <div className="flex flex-col">
-            <Post />
-          </div>
-        </div>
-        <div>
-          <div className="flex items-center justify-between pb-2">
-            <h1 className="text-violet font-semibold text-3xl">
-              Pending Posts
-            </h1>
-            <p className="text-red text-base font-bold">Delete All</p>
-          </div>
-          <div className="flex flex-col">
-            <Post />
-          </div>
+          {userInformation.isVerified ? (
+            <div className="flex flex-col gap-2">
+              {posts?.map((post) => {
+                const { createdByUserName, description } = post;
+                return (
+                  <Post
+                    createdByUserName={createdByUserName}
+                    description={description}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-center justify-between pb-2">
+                <h1 className="text-violet font-semibold text-3xl">
+                  Pending Posts
+                </h1>
+                <p className="text-red text-base font-bold">Delete All</p>
+              </div>
+              <div className="flex flex-col">
+                <Post />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

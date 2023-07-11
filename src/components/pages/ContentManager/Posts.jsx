@@ -2,7 +2,7 @@ import React from 'react';
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import women from '../../../assets/ContentManager/women.png';
-const Post = () => {
+const Post = (props) => {
   return (
     <Card
       style={{
@@ -18,8 +18,8 @@ const Post = () => {
         <img src={women} alt="" className="w-full h-full" />
       </div>
       <div className="flex flex-col w-[12rem] justify-center ">
-        <h1 className="text-xl font-bold">Ehsan Ellahi</h1>
-        <p className="text-base text-grey">My name is...</p>
+        <h1 className="text-xl font-bold">{props.createdByUserName}</h1>
+        <p className="text-base text-grey">{props.description}</p>
       </div>
       <div className="grid gap-2">
         <Button

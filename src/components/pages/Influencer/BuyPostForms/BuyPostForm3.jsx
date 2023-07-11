@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import Backdrop from '../../../UI/Backdrop';
 import Button from './../../../UI/Button';
 import styles from './../Influencer.module.css';
+import Spinner from '../../../../utils/Spinner';
 
 function BuyPostForm3(props){
      const cardHolderRef=useRef();
@@ -54,7 +55,7 @@ function BuyPostForm3(props){
              </div>
              </div>
              
-            <Button>Pay now</Button>
+            <Button>{props.loading ? <Spinner size={8}/> :'Pay now'}</Button>
             </form>
         </Backdrop>
         

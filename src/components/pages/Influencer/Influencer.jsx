@@ -13,8 +13,8 @@ const Influencer = () => {
       <InfluencerProvider username={username}>
         <BuyPostProvider>
           <section className={classes.influencerPage}>
-            <InfluencerCard> </InfluencerCard>
-            <InfluencerNavData> </InfluencerNavData>
+            <InfluencerCard />
+            <InfluencerNavData />
           </section>
         </BuyPostProvider>
       </InfluencerProvider>

@@ -68,7 +68,7 @@ function BuyPostForm3(props) {
   }
 
 
-<<<<<<< HEAD
+//Usama Commit
   function dateValidation(date){
     const currentYear = new Date().getFullYear();
       const selectedYear= date.getFullYear();
@@ -130,7 +130,7 @@ function BuyPostForm3(props) {
       </form>
     </Backdrop>
   );
-=======
+//Ehsaan Commit
              <div className={styles.paymentField}>
               <label>CVC*</label>
         <input type="number" placeholder='Enter CVC number' ref={cvcRef} />
@@ -142,7 +142,7 @@ function BuyPostForm3(props) {
         </Backdrop>
         
     )
->>>>>>> a8e666f571796085685199f6b3b0bc26e9d8406d
+
 }
 
 export default BuyPostForm3;

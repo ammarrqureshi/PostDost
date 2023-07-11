@@ -1,5 +1,5 @@
 import classes from './../../../Influencer.module.css';
-import collabIcon from './../../../../../../assets/InfluencerPageAssets/collabimg.png';
+import collabIcon from './../../../../../../assets/InfluencerPageAssets/collabImg.png';
 
 function CollabProfiles(props){
     return(

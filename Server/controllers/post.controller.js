@@ -2,7 +2,7 @@ import Influencer from '../models/influencer.model.js';
 import User from '../models/user.model.js';
 import createError from '../utils/createError.js';
 import LogError from '../utils/LogError.js';
-import Post from '../Models/post.model.js';
+import Post from '../models/post.model.js';
 export const createPost = async (req, res, next) => {
   const newPost = new Post({
     createdByUser: req.userId,

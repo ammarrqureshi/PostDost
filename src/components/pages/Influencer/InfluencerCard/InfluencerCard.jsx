@@ -1,109 +1,155 @@
-import { useContext, useState } from "react";
-import { InfluencerContext } from "../../../../contexts/InfluencerProvider";
-import InfluencerImage from "./InfluencerImage";
-import classes from './../Influencer.module.css'; 
+import { useContext, useState } from 'react';
+
+import { InfluencerContext } from '../../../../contexts/InfluencerProvider';
+import { BuyPostContext } from '../../../../contexts/BuyPostProvider';
+
+import InfluencerImage from './InfluencerImage';
+import classes from './../Influencer.module.css';
+
 import InstaIcon from './../../../../assets/InfluencerPageAssets/InstaIcon.png';
 import LocationIcon from './../../../../assets/InfluencerPageAssets/LocationInfo.png';
-import Addtofavourite from "./Addtofavourite";
-import TagElements from "./TagElements";
+
+import Addtofavourite from './Addtofavourite';
+import TagElements from './TagElements';
+
 import Card from '../../../UI/Card';
 import Button from '../../../UI/Button';
-import BuyPostForm1 from "../BuyPostForms/BuyPostForm1";
-import BuyPostForm2 from "../BuyPostForms/BuyPostForm2";
-import BuyPostForm3 from "../BuyPostForms/BuyPostForm3";
-import { BuyPostContext } from "../../../../contexts/BuyPostProvider";
 
+import BuyPostForm1 from '../BuyPostForms/BuyPostForm1';
+import BuyPostForm2 from '../BuyPostForms/BuyPostForm2';
+import BuyPostForm3 from '../BuyPostForms/BuyPostForm3';
 
-function InfluencerCard(){
-    const ctx=useContext(InfluencerContext);
-    const buyPostContext=useContext(BuyPostContext);
+import upload from '../../../../utils/upload';
+import ToastMessage from '../../../../utils/ToastNotification';
+import { apiPostCall } from '../../../../utils/API';
+import Spinner from '../../../../utils/Spinner';
 
-    const [formIndex,setFormIndex]=useState();
-    const [buyFormData1,setBuyFormData1]=useState();
-    const [buyFormData2,setBuyFormData2]=useState();
-    
-    
+function InfluencerCard() {
+  const ctx = useContext(InfluencerContext);
+  const buyPostContext = useContext(BuyPostContext);
+  const [loading, setLoading] = useState(false);
+  const [formIndex, setFormIndex] = useState();
+  const [buyFormData1, setBuyFormData1] = useState();
+  const [buyFormData2, setBuyFormData2] = useState();
 
-    function showFormHandler(){
+  function showFormHandler() {
     setFormIndex(0);
+  }
+
+  // ! Form no 2 Form index setting
+  function form2IndexHandler(value) {
+    setFormIndex(value);
+  }
+
+  // ! Form no 3 Form index setting
+  function form3IndexHandler(value) {
+    setFormIndex(value);
+  }
+
+  // ! Closing form after submit
+  function formCloseHandler(value) {
+    setFormIndex(value);
+  }
+
+  //  ! Setting Form Data in context
+
+  function form1Data(uploadedFile) {
+    setBuyFormData1(uploadedFile);
+
+    const buyPostData = {
+      uploadedFile: uploadedFile,
+    };
+    buyPostContext.setBuyPostContext(buyPostData);
+  }
+
+  function form2Data(captionPara) {
+    setBuyFormData2(captionPara);
+  }
+
+  async function form3Data(form3Data) {
+    setLoading(true);
+    const buyPostData = {
+      uploadedFile: buyFormData1,
+      captionPara: buyFormData2,
+      cardHolderName: form3Data.cardHolderName,
+      creditDebitNumber: form3Data.creditDebitNumber,
+      enteredDate: form3Data.enteredDate,
+      cvc: form3Data.cvc,
+    };
+    buyPostContext.setBuyPostContext(buyPostData);
+    console.log(buyPostData);
+    const { captionPara } = buyPostData;
+    const res = await apiPostCall('/post', { captionPara });
+    setLoading(false);
+    console.log(res);
+    if (res.success) {
+      ToastMessage({
+        type: 'success',
+        message: 'Post has been sent to Influencer for their Approval!',
+      });
+    } else {
+      ToastMessage({
+        type: 'error',
+        message: 'Failed to Post, Please try again later!',
+      });
     }
-    
-    // ! Form no 2 Form index setting
-    function form2IndexHandler(value){
-        setFormIndex(value);
-    }
+  }
 
-    // ! Form no 3 Form index setting
-    function form3IndexHandler(value){
-        setFormIndex(value);
-    }
+  return (
+    <>
+      {formIndex == 0 && (
+        <BuyPostForm1
+          onCancel={formCloseHandler}
+          form1Data={form1Data}
+          formIndex={form2IndexHandler}
+        ></BuyPostForm1>
+      )}
+      {formIndex == 1 && (
+        <BuyPostForm2
+          onCancel={formCloseHandler}
+          form2Data={form2Data}
+          formIndex={form3IndexHandler}
+        ></BuyPostForm2>
+      )}
+      {formIndex == 2 && (
+        <BuyPostForm3
+          onCancel={formCloseHandler}
+          form3Data={form3Data}
+          formIndex={formCloseHandler}
+          loading={loading}
+        ></BuyPostForm3>
+      )}
 
-    // ! Closing form after submit
-     function formCloseHandler(value){
-        setFormIndex(value);
-     }
-    
-    //  ! Setting Form Data in context
-
-    function form1Data(uploadedFile){
-        setBuyFormData1(uploadedFile);
-
-        const buyPostData = {
-            uploadedFile: uploadedFile,
-          };
-          buyPostContext.setBuyPostContext(buyPostData);
-    }
-
-    function form2Data(captionPara){
-        setBuyFormData2(captionPara);
-    }
-
-    function form3Data(form3Data){
-        const buyPostData={
-            uploadedFile: buyFormData1,
-            captionPara: buyFormData2,
-            cardHolderName: form3Data.cardHolderName,
-            creditDebitNumber: form3Data.creditDebitNumber,
-            enteredDate: form3Data.enteredDate,
-            cvc: form3Data.cvc
-        }
-        buyPostContext.setBuyPostContext(buyPostData);
-    }
-
-    return(
-        <>
-        {formIndex==0 && <BuyPostForm1 onCancel={formCloseHandler} form1Data={form1Data}
-        formIndex={form2IndexHandler}></BuyPostForm1>}
-        {formIndex==1 && <BuyPostForm2 onCancel={formCloseHandler} form2Data={form2Data} 
-        formIndex={form3IndexHandler}></BuyPostForm2>}
-        {formIndex==2 && <BuyPostForm3 onCancel={formCloseHandler} form3Data={form3Data}
-        formIndex={formCloseHandler}></BuyPostForm3>}
-
-        <Card>
+      <Card>
         <div className={classes.influencerCard}>
           <InfluencerImage displayImage={ctx.profileImg}></InfluencerImage>
           <section className={classes.cardText}>
-          <h1>{ctx.influencerName}</h1>
-          <h2>@{ctx.username}</h2>
-          <h3>{ctx.profession}</h3>
+            <h1>{ctx.influencerName}</h1>
+            <h2>@{ctx.username}</h2>
+            <h3>{ctx.profession}</h3>
           </section>
           <Addtofavourite></Addtofavourite>
           <TagElements></TagElements>
           <div className={classes.socialMediaLinks}>
-          <div className={classes.instaInfo}>
-          <img src={InstaIcon} alt="Insta-icon" />
-          <label>{ctx.followers} Followers</label>
+            <div className={classes.instaInfo}>
+              <img src={InstaIcon} alt="Insta-icon" />
+              <label>{ctx.followers} Followers</label>
+            </div>
+            <div className={classes.locationInfo}>
+              <img src={LocationIcon} alt="location-icon" />
+              <label>
+                {ctx.city}, {ctx.country}
+              </label>
+            </div>
           </div>
-          <div className={classes.locationInfo}>
-          <img src={LocationIcon} alt="location-icon" />
-          <label>{ctx.city}, {ctx.country}</label>
-          </div>
-          </div>
-          <Button onClick={showFormHandler}>Buy now <span>{ctx.initialPrice}$</span></Button>
+          <Button onClick={showFormHandler}>
+            Buy now <span>{ctx.initialPrice}$</span>
+          </Button>
           <Button $secondary>Message now</Button>
-          </div>
-         </Card>
-         </>
-    )}
+        </div>
+      </Card>
+    </>
+  );
+}
 
 export default InfluencerCard;

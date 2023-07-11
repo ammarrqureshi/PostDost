@@ -4,7 +4,7 @@ import {
   registerInfluencer,
   allInfluencer,
   getInfluencerUsername,
-} from '../Controllers/influencer.controller.js';
+} from '../controllers/influencer.controller.js';
 import { verifyToken } from '../middleware/jwt.js';
 
 influencerRoutes.post('/', verifyToken, registerInfluencer);

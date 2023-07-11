@@ -16,7 +16,6 @@ import { apiGetCall } from '../../../utils/API';
 const Explore = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [influencers, setInfluencers] = useState([]);
-  console.log(influencers);
   useEffect(() => {
     (async () => {
       const res = await apiGetCall('/influencer');
@@ -102,7 +101,6 @@ const Explore = () => {
         <div className="flex flex-row flex-wrap gap-10 relative ml-2">
           {filteredData.length !== 0 ? (
             influencers?.map((person) => {
-              console.log(person);
               return (
                 <Link
                   key={person._id}

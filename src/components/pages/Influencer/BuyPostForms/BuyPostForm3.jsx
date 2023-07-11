@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import Backdrop from '../../../UI/Backdrop';
 import Button from './../../../UI/Button';
 import styles from './../Influencer.module.css';
+import Spinner from '../../../../utils/Spinner';
 
 function BuyPostForm3(props) {
   const cardHolderRef = useRef();
@@ -67,6 +68,7 @@ function BuyPostForm3(props) {
   }
 
 
+<<<<<<< HEAD
   function dateValidation(date){
     const currentYear = new Date().getFullYear();
       const selectedYear= date.getFullYear();
@@ -128,6 +130,19 @@ function BuyPostForm3(props) {
       </form>
     </Backdrop>
   );
+=======
+             <div className={styles.paymentField}>
+              <label>CVC*</label>
+        <input type="number" placeholder='Enter CVC number' ref={cvcRef} />
+             </div>
+             </div>
+             
+            <Button>{props.loading ? <Spinner size={8}/> :'Pay now'}</Button>
+            </form>
+        </Backdrop>
+        
+    )
+>>>>>>> a8e666f571796085685199f6b3b0bc26e9d8406d
 }
 
 export default BuyPostForm3;

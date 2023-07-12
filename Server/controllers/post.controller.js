@@ -4,15 +4,21 @@ import createError from '../utils/createError.js';
 import LogError from '../utils/LogError.js';
 import Post from '../Models/post.model.js';
 export const createPost = async (req, res) => {
-  console.log(req.userId, req.isInfluencer);
+  const { username } = req.params;
+  // console.log(username);
+  // console.log(req.userId, req.isInfluencer);
   const user = await User.findById({ _id: req.userId });
+  // console.log(user);
   const userName = `${user.firstName} ${user.secondName}`;
-  const influencer = await Influencer.findOne({ registeredBy: req.userId });
-  console.log(user, userName, influencer);
+  const influencer = await Influencer.find({ username });
+  console.log('GotInfluencer', influencer);
+  // console.log(user, userName, influencer);
+  const gotInfluencer = influencer[0];
+  console.log(gotInfluencer._id, gotInfluencer.username);
   const { captionPara } = req.body;
   const newPost = new Post({
     createdByUser: req.userId,
-    createdForInfluencer: req.isInfluencer ? influencer._id : '',
+    createdForInfluencer: gotInfluencer._id,
     createdByUserName: userName,
     description: captionPara,
   });

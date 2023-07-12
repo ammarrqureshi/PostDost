@@ -79,7 +79,7 @@ function InfluencerCard() {
     buyPostContext.setBuyPostContext(buyPostData);
     console.log(buyPostData);
     const { captionPara } = buyPostData;
-    const res = await apiPostCall('/post', { captionPara });
+    const res = await apiPostCall(`/post/${ctx.username}`, { captionPara });
     setLoading(false);
     console.log(res);
     if (res.success) {

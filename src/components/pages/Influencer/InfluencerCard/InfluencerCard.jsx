@@ -19,7 +19,7 @@ import BuyPostForm1 from '../BuyPostForms/BuyPostForm1';
 import BuyPostForm2 from '../BuyPostForms/BuyPostForm2';
 import BuyPostForm3 from '../BuyPostForms/BuyPostForm3';
 
-import upload from '../../../../utils/upload';
+import convertToBase64 from '../../../../utils/uploadImage';
 import ToastMessage from '../../../../utils/ToastNotification';
 import { apiPostCall } from '../../../../utils/API';
 import Spinner from '../../../../utils/Spinner';
@@ -31,6 +31,7 @@ function InfluencerCard() {
   const [formIndex, setFormIndex] = useState();
   const [buyFormData1, setBuyFormData1] = useState();
   const [buyFormData2, setBuyFormData2] = useState();
+  const [url, setUrl] = useState('');
 
   function showFormHandler() {
     setFormIndex(0);
@@ -78,8 +79,13 @@ function InfluencerCard() {
     };
     buyPostContext.setBuyPostContext(buyPostData);
     console.log(buyPostData);
-    const { captionPara } = buyPostData;
-    const res = await apiPostCall(`/post/${ctx.username}`, { captionPara });
+    const { captionPara, uploadedFile } = buyPostData;
+    const url = convertToBase64(uploadedFile);
+    console.log(url);
+    const res = await apiPostCall(`/post/${ctx.username}`, {
+      captionPara,
+      url,
+    });
     setLoading(false);
     console.log(res);
     if (res.success) {
@@ -87,6 +93,7 @@ function InfluencerCard() {
         type: 'success',
         message: 'Post has been sent to Influencer for their Approval!',
       });
+      formIndex(4);
     } else {
       ToastMessage({
         type: 'error',
@@ -128,8 +135,8 @@ function InfluencerCard() {
             <h2>@{ctx.username}</h2>
             <h3>{ctx.profession}</h3>
           </section>
-          <Addtofavourite></Addtofavourite>
-          <TagElements></TagElements>
+          <Addtofavourite/>
+          <TagElements/>
           <div className={classes.socialMediaLinks}>
             <div className={classes.instaInfo}>
               <img src={InstaIcon} alt="Insta-icon" />

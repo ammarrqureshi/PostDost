@@ -1,10 +1,31 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { v4 } from 'uuid';
+
 import Backdrop from '../../../UI/Backdrop';
 import Button from './../../../UI/Button';
-import styles from './../Influencer.module.css';
-import Spinner from '../../../../utils/Spinner';
 
-function BuyPostForm3(props) {
+import styles from './../Influencer.module.css';
+
+import { BuyPostContext } from '../../../../contexts/BuyPostProvider';
+import { InfluencerContext } from '../../../../contexts/InfluencerProvider';
+
+import { storage } from '../../../../utils/firebase';
+import Spinner from '../../../../utils/Spinner';
+import ToastMessage from '../../../../utils/ToastNotification';
+import { apiPostCall } from '../../../../utils/API';
+
+function BuyPostForm3() {
+  //All the Data state made in context!
+  const {
+    setPostData,
+    postData,
+    setFormIndex,
+    CancelForm,
+    loading,
+    setLoading,
+  } = useContext(BuyPostContext);
+  const { _id } = useContext(InfluencerContext);
   const cardHolderRef = useRef();
   const creditDebitRef = useRef();
   const enteredDateRef = useRef();
@@ -13,31 +34,65 @@ function BuyPostForm3(props) {
   const [cvcError, setCvcError] = useState('');
   const [dateError, setDateError] = useState('');
 
-  function formSubmitHandler(e) {
+  async function formSubmitHandler(e) {
     e.preventDefault();
-    const form3Data = {
-      cardHolderName: cardHolderRef.current.value,
-      creditDebitNumber: creditDebitRef.current.value,
-
-      //   enteredDate: enteredDateRef.current.value,
-      enteredDate: new Date(enteredDateRef.current.value),
-      cvc: cvcRef.current.value,
+    setLoading(true);
+    const uploadImage = async () => {
+      const imageRef = ref(storage, `images/${postData.Image.name + v4()}`);
+      const uploadResponse = await uploadBytes(imageRef, postData.Image);
+      console.log(uploadResponse);
+      const imageUrl = await getDownloadURL(uploadResponse.ref);
+      return imageUrl;
     };
-    console.log(form3Data.enteredDate);
-
+    const imageURL = await uploadImage();
+    const cardHolderName = cardHolderRef.current.value;
+    const creditDebitNumber = creditDebitRef.current.value;
+    const enteredDate = new Date(enteredDateRef.current.value);
+    const cvc = cvcRef.current.value;
     if (
-      form3Data.cardHolderName &&
-      form3Data.creditDebitNumber &&
-      form3Data.enteredDate &&
-      form3Data.cvc &&
-      creditCardValidation(form3Data.creditDebitNumber) &&
-      cvcNumberValidation(form3Data.cvc) &&
-      dateValidation(form3Data.enteredDate)
+      cardHolderName &&
+      creditDebitNumber &&
+      enteredDate &&
+      cvc &&
+      creditCardValidation(creditDebitNumber) &&
+      cvcNumberValidation(cvc) &&
+      dateValidation(enteredDate)
     ) {
-      props.form3Data(form3Data);
+      setPostData((prevValues) => ({
+        ...prevValues,
+        paymentCredentials: {
+          cardHolderName: cardHolderRef.current.value,
+          creditDebitNumber: creditDebitRef.current.value,
+          enteredDate: enteredDateRef.current.value,
+          cvc: cvcRef.current.value,
+        },
+        postMediaURL: imageURL,
+      }));
+      try {
+        const res = await apiPostCall(`/post/${_id}`, { postData, imageURL });
+        setLoading(false);
+        if (res.success) {
+          ToastMessage({
+            type: 'success',
+            message: 'Post sent to influencer for approval successfully!',
+          });
+        } else {
+          ToastMessage({
+            type: 'error',
+            message: 'Failed to Post your post!',
+          });
+        }
+        setFormIndex(0);
+      } catch (error) {
+        console.log(error);
+        ToastMessage({
+          type: 'error',
+          message: 'Posting Failed due to Server Error,Please try again later!',
+        });
+      }
+    } else {
+      ToastMessage({ type: 'error', message: 'Please Re-Enter Values' });
     }
-    // creditCardValidation(form3Data.creditDebitNumber);
-    // cvcNumberValidation(form3Data.cvc);
   }
 
   function creditCardValidation(creditCardNumber) {
@@ -83,9 +138,8 @@ function BuyPostForm3(props) {
       <form className={styles.buyPostForm1} onSubmit={formSubmitHandler}>
         <div className={styles.buyFormHeading}>
           <h1>Add Payment Detail</h1>
-          <span onClick={props.onCancel}>&times;</span>
+          <span onClick={CancelForm}>&times;</span>
         </div>
-
         <div className={styles.addPaymentFields}>
           <div className={styles.paymentField}>
             <label>Card Holder*</label>
@@ -100,7 +154,7 @@ function BuyPostForm3(props) {
             <label>Credit/Debit Card Number*</label>
             <input
               type="text"
-              maxlength="16"
+              maxLength="16"
               placeholder="Enter credit/debit card number"
               ref={creditDebitRef}
             />
@@ -129,7 +183,7 @@ function BuyPostForm3(props) {
             <label>CVC*</label>
             <input
               type="text"
-              maxlength="3"
+              maxLength="3"
               placeholder="Enter CVC number"
               ref={cvcRef}
             />
@@ -141,7 +195,7 @@ function BuyPostForm3(props) {
           </div>
         </div>
 
-        <Button>Pay now</Button>
+        <Button>{loading ? <Spinner size={14} /> : 'Pay now'}</Button>
       </form>
     </Backdrop>
   );

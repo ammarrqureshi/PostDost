@@ -7,6 +7,7 @@ export const InfluencerContext = createContext();
 function InfluencerProvider(props) {
   const { username } = props;
   const [influencerInfo, setInfluencerInfo] = useState({
+    _id: '',
     username: '',
     country: '',
     category: '',
@@ -20,6 +21,7 @@ function InfluencerProvider(props) {
     (async () => {
       const res = await apiGetCall(`/influencer/${username}`);
       const {
+        _id,
         username: username2,
         country,
         category,
@@ -30,6 +32,7 @@ function InfluencerProvider(props) {
         city,
       } = res;
       setInfluencerInfo({
+        _id,
         username: username2,
         country,
         category,
@@ -42,6 +45,7 @@ function InfluencerProvider(props) {
     })();
   }, []);
   const cardDataObj = {
+    _id: `${influencerInfo._id}`,
     profileImg: img,
     influencerName: `${influencerInfo.firstName} ${influencerInfo.secondName} `,
     username: `${influencerInfo.username}`,

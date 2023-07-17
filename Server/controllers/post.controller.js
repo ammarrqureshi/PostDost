@@ -4,23 +4,22 @@ import createError from '../utils/createError.js';
 import LogError from '../utils/LogError.js';
 import Post from '../Models/post.model.js';
 export const createPost = async (req, res) => {
-  const { username } = req.params;
-  // console.log(username);
-  // console.log(req.userId, req.isInfluencer);
+  const { id } = req.params;
+  const { postData, imageURL } = req.body;
+  const { Caption, postMediaURL } = postData;
+
   const user = await User.findById({ _id: req.userId });
-  // console.log(user);
   const userName = `${user.firstName} ${user.secondName}`;
-  const influencer = await Influencer.find({ username });
+
+  const influencer = await Influencer.findById({ _id: id });
   console.log('GotInfluencer', influencer);
-  // console.log(user, userName, influencer);
-  const gotInfluencer = influencer[0];
-  console.log(gotInfluencer._id, gotInfluencer.username);
-  const { captionPara } = req.body;
+
   const newPost = new Post({
     createdByUser: req.userId,
-    createdForInfluencer: gotInfluencer._id,
+    createdForInfluencer: influencer._id,
     createdByUserName: userName,
-    description: captionPara,
+    description: Caption,
+    media: [postMediaURL],
   });
   try {
     const savedPost = newPost

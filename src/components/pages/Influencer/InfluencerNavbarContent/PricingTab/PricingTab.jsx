@@ -16,7 +16,7 @@ function PricingTab(){
 
     return(
            <div className={classes.pricingPageContent}>
-            <PricingTabNavbar></PricingTabNavbar>
+            <PricingTabNavbar/>
             {pricingContent[activePricingTab]}
           </div>    
     )}

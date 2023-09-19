@@ -5,7 +5,6 @@ import { BuyPostContext } from '../../../../contexts/BuyPostProvider';
 
 import InfluencerImage from './InfluencerImage';
 import classes from './../Influencer.module.css';
-
 import InstaIcon from './../../../../assets/InfluencerPageAssets/InstaIcon.png';
 import LocationIcon from './../../../../assets/InfluencerPageAssets/LocationInfo.png';
 
@@ -19,117 +18,26 @@ import BuyPostForm1 from '../BuyPostForms/BuyPostForm1';
 import BuyPostForm2 from '../BuyPostForms/BuyPostForm2';
 import BuyPostForm3 from '../BuyPostForms/BuyPostForm3';
 
-import upload from '../../../../utils/upload';
-import ToastMessage from '../../../../utils/ToastNotification';
-import { apiPostCall } from '../../../../utils/API';
-import Spinner from '../../../../utils/Spinner';
-
 function InfluencerCard() {
   const ctx = useContext(InfluencerContext);
-  const buyPostContext = useContext(BuyPostContext);
-  const [loading, setLoading] = useState(false);
-  const [formIndex, setFormIndex] = useState();
-  const [buyFormData1, setBuyFormData1] = useState();
-  const [buyFormData2, setBuyFormData2] = useState();
-
-  function showFormHandler() {
-    setFormIndex(0);
-  }
-
-  // ! Form no 2 Form index setting
-  function form2IndexHandler(value) {
-    setFormIndex(value);
-  }
-
-  // ! Form no 3 Form index setting
-  function form3IndexHandler(value) {
-    setFormIndex(value);
-  }
-
-  // ! Closing form after submit
-  function formCloseHandler(value) {
-    setFormIndex(value);
-  }
-
-  //  ! Setting Form Data in context
-
-  function form1Data(uploadedFile) {
-    setBuyFormData1(uploadedFile);
-
-    const buyPostData = {
-      uploadedFile: uploadedFile,
-    };
-    buyPostContext.setBuyPostContext(buyPostData);
-  }
-
-  function form2Data(captionPara) {
-    setBuyFormData2(captionPara);
-  }
-
-  async function form3Data(form3Data) {
-    setLoading(true);
-    const buyPostData = {
-      uploadedFile: buyFormData1,
-      captionPara: buyFormData2,
-      cardHolderName: form3Data.cardHolderName,
-      creditDebitNumber: form3Data.creditDebitNumber,
-      enteredDate: form3Data.enteredDate,
-      cvc: form3Data.cvc,
-    };
-    buyPostContext.setBuyPostContext(buyPostData);
-    console.log(buyPostData);
-    const { captionPara } = buyPostData;
-    const res = await apiPostCall(`/post/${ctx.username}`, { captionPara });
-    setLoading(false);
-    console.log(res);
-    if (res.success) {
-      ToastMessage({
-        type: 'success',
-        message: 'Post has been sent to Influencer for their Approval!',
-      });
-    } else {
-      ToastMessage({
-        type: 'error',
-        message: 'Failed to Post, Please try again later!',
-      });
-    }
-  }
+  const { formIndex, IncrementFormIndex } = useContext(BuyPostContext);
 
   return (
     <>
-      {formIndex == 0 && (
-        <BuyPostForm1
-          onCancel={formCloseHandler}
-          form1Data={form1Data}
-          formIndex={form2IndexHandler}
-        ></BuyPostForm1>
-      )}
-      {formIndex == 1 && (
-        <BuyPostForm2
-          onCancel={formCloseHandler}
-          form2Data={form2Data}
-          formIndex={form3IndexHandler}
-        ></BuyPostForm2>
-      )}
-      {formIndex == 2 && (
-        <BuyPostForm3
-          onCancel={formCloseHandler}
-          form3Data={form3Data}
-          formIndex={formCloseHandler}
-          loading={loading}
-        ></BuyPostForm3>
-      )}
+      {formIndex == 1 && <BuyPostForm1 />}
+      {formIndex == 2 && <BuyPostForm2 />}
+      {formIndex == 3 && <BuyPostForm3 />}
 
       <Card>
         <div className={classes.influencerCard}>
-          <InfluencerImage displayImage={ctx.profileImg}></InfluencerImage>
+          <InfluencerImage displayImage={ctx.profileImg} />
           <section className={classes.cardText}>
             <h1>{ctx.influencerName}</h1>
             <h2>@{ctx.username}</h2>
             <h3>{ctx.profession}</h3>
           </section>
-          <Addtofavourite></Addtofavourite>
-          <TagElements></TagElements>
+          <Addtofavourite />
+          <TagElements />
           <div className={classes.socialMediaLinks}>
             <div className={classes.instaInfo}>
               <img src={InstaIcon} alt="Insta-icon" />
@@ -142,7 +50,7 @@ function InfluencerCard() {
               </label>
             </div>
           </div>
-          <Button onClick={showFormHandler}>
+          <Button onClick={IncrementFormIndex}>
             Buy now <span>{ctx.initialPrice}$</span>
           </Button>
           <Button $secondary>Message now</Button>

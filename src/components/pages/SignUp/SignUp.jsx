@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 import { FaGoogle } from 'react-icons/fa';
 
-import logo from '../../../assets/guestpostlogo.svg';
+import logo from '../../../assets/logo.png';
 
 import Checkbox from '../../UI/SignUpCheckbox';
 import TextField from '../../UI/TextField';

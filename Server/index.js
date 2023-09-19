@@ -3,15 +3,22 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 dotenv.config();
 import cors from 'cors';
+
 import app from './app.js';
+
 import ConnectToMongoose from './Db/index.js';
+
 import authRoutes from './routes/auth.route.js';
 import userRoutes from './routes/user.route.js';
 import influencerRoutes from './routes/influencer.route.js';
 import postRoutes from './routes/post.route.js';
+
+import upload from './utils/uploadImage.js';
+
 import ErrorHandler from './middleware/globalErrorHandler.js';
 
 const MODE = process.env.NODE_ENV;
+
 //Generic Middleware
 app.use(cookieParser());
 app.use(express.json());
@@ -33,6 +40,11 @@ app.use('/api/users', userRoutes);
 app.use('/api/influencer', influencerRoutes);
 app.use('/api/post', postRoutes);
 
+app.post('/api/uploadImage', (req, res) => {
+  uploadImage(req.body.image)
+    .then((url) => res.json({ message: 'Image Uploaded Successfully!', url }))
+    .catch((err) => res.json({ message: err }));
+});
 //Error Handling Middleware
 ErrorHandler();
 

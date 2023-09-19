@@ -24,24 +24,30 @@ const ContentManager = () => {
       <h1 className="font-bold text-[2.5rem] leading-10">Content Manager</h1>
       <div className="flex gap-12 items-center pt-12">
         <div>
-          <div className="flex items-center justify-end pb-2">
-            <div className="flex flex-col">
-              <p className="text-green text-base font-bold">Approve All</p>
-              <p className="text-red text-base font-bold">Reject All</p>
-            </div>
-          </div>
           {userInformation.isVerified ? (
-            <div className="flex flex-col gap-2">
-              {posts?.map((post) => {
-                const { createdByUserName, description } = post;
-                return (
-                  <Post
-                    createdByUserName={createdByUserName}
-                    description={description}
-                  />
-                );
-              })}
-            </div>
+            <>
+              <div className="flex items-center justify-end pb-2">
+                <div className="flex flex-col">
+                  <p className="text-green text-base font-bold">Approve All</p>
+                  <p className="text-red text-base font-bold">Reject All</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                {posts?.map((post, index) => {
+                  const { createdByUserName, description, media } = post;
+                  const image = media[0];
+                  {/* console.log(image); */}
+                  return (
+                    <Post
+                      key={index}
+                      createdByUserName={createdByUserName}
+                      description={description}
+                      media={image}
+                    />
+                  );
+                })}
+              </div>
+            </>
           ) : (
             <div>
               <div className="flex items-center justify-between pb-2">

@@ -7,7 +7,7 @@ export const verifyToken = (req, res, next) => {
   LogError('token', token);
   if (!token || token == 'undefiend') {
     res.json({ message: 'You are not authorized' });
-    return;
+    return;o
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, payload) => {

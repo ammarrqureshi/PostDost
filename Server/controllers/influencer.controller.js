@@ -71,7 +71,7 @@ export const allInfluencer = async (req, res, next) => {
 };
 
 export const getInfluencerUsername = async (req, res) => {
-  console.log(req.params);
+  // console.log(req.params);
   const { username } = req.params;
   try {
     const influencer = await Influencer.findOne({ username });

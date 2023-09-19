@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import women from '../../../assets/ContentManager/women.png';
 const Post = (props) => {
+  console.log(props.media);
+  // const [image, setImage] = useState('');
+  // if (props.media) {
+  //   setImage(props.media);
+  // } else {
+  //   setImage(women);
+  // }
+  // // console.log(image);
   return (
     <Card
       style={{

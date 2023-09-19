@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-import logo from '../../../assets/guestpostlogo.svg';
+import logo from '../../../assets/logo.png';
 
 import TextField from '../../UI/TextField';
 import Button from '../../UI/Button';

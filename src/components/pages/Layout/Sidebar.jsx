@@ -49,7 +49,7 @@ const Sidebar = () => {
       >
         <div className="pt-7">
           <img
-            src="/guestpostlogo.svg"
+            src="/sidebar/logo.png"
             alt="Logo"
           />
         </div>

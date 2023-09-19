@@ -7,7 +7,7 @@ import { CiLogout } from 'react-icons/ci';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 //Internal Imports
-import logo from '../../../assets/guestpostlogo.svg';
+import logo from '../../../assets/logo.png';
 import Button from '../../UI/Button';
 import Drawer from 'react-modern-drawer';
 import 'react-modern-drawer/dist/index.css';
